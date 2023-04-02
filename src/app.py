@@ -11,8 +11,22 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from flask import Flask
+from flask import jsonify
+from flask import request
 
-#from models import Person
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
+
+
+from flask_jwt_extended import JWTManager
+
+app = Flask(__name__)
+
+
+
+
 
 ENV = os.getenv("FLASK_ENV")
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
@@ -29,6 +43,12 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
+
+# Configura la clave secreta utilizada para firmar tokens JWT
+app.config['JWT_SECRET_KEY'] = 'super-secreto'
+# Inicializa la extensión JWTManager con la aplicación Flask
+jwt = JWTManager(app)
+
 
 # Allow CORS requests to this API
 CORS(app)
