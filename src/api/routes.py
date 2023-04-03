@@ -10,8 +10,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Blueprint('api', __name__)
 
-#  PETICION MEMBERS
-
+#  GET MEMBERS
 @api.route('/members', methods=['GET'])
 def getMembers():
     callMembers = Members.query.all() #Llama todos los elementos de la lista
@@ -23,6 +22,7 @@ def getMembers():
     }
     return jsonify(response_body), 200
 
+#  GET MEMBERS ID
 @api.route('/members/<int:members_id>', methods=['GET'])
 def get_members_id(members_id):
     call_member = Members.query.get(members_id) #Llama el elemento de la lista
@@ -34,7 +34,8 @@ def get_members_id(members_id):
     }
     return jsonify(response_body), 200
 
-@api.route('/registro', methods=['POST'])
+#  ADD MEMBER
+@api.route('/signup', methods=['POST'])
 def create_member():
     name = request.json.get("name", None) #Agregar los valores al cuerpo de la peticion
     last_name = request.json.get("last_name", None)  #Agregar los valores al cuerpo de la peticion
@@ -50,20 +51,29 @@ def create_member():
         db.session.add(new_member)
         db.session.commit()
     
-        member_data = {'member': new_member.serialize()}
+        response_body = {
+            'msg: ' : 'Member agregado', 
+            'member': new_member.serialize()
+            }
         
-        return jsonify(member_data), 200
+        return jsonify(response_body), 200
 
 
+# DELETE MEMBER
+@api.route('/members/<int:member_id>', methods= ['DELETE'])
+def deleteMember(member_id):
+    delete_Member = Members.query.get(member_id)
+    db.session.delete(delete_Member)
+    db.session.commit()
 
-@api.route('/users', methods=['GET'])
-def get_users():
-    callUsers = User.query.all()
-    result= [element.serialize() for element in callUsers]
-    response_body = {"Add perfect"}
-    return jsonify(result), 200
+    response_body = {
+            'msg: ' : 'Member borrado', 
+            'member': delete_Member.serialize()
+            }
+    return jsonify(response_body)
 
 
+# LOGIN
 @api.route('/login', methods=['POST'])
 def login():
     name = request.json.get("name", None)
@@ -83,8 +93,9 @@ def login():
         "token": access_token
     }
 
-    return jsonify(response_body), 200 
+    return jsonify(response_body), 201 
 
+# TOKEN
 @api.route("/private", methods=["GET"])
 @jwt_required()
 def protected():
