@@ -35,3 +35,19 @@ class Members(db.Model):
             "age": self.age
             # do not serialize the password, its a security breach
         }
+
+class Favorites(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    members_id = db.Column(db.Integer, db.ForeignKey("members.id"))
+
+    def __repr__(self):
+        return '<Favorites %r>' % self.id 
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "members_id": self.members_id,
+            # do not serialize the password, its a security breach
+        }

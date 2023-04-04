@@ -32,14 +32,14 @@ export const Home = () => {
 			}),
 		})
 			.then((response) => response.json())
-			.then((result) => {
-				console.log(result);
+			.then((data) => {
+				console.log(data);
 				setSignupMessage("¡Te has registrado exitosamente!");
 			})
 			.catch((error) => console.log("error", error));
 	};
 
-// ---------------------------- POST / LOGIN----------------------------------//
+	// ---------------------------- POST / LOGIN----------------------------------//
 	const login = () => {
 
 		fetch(process.env.BACKEND_URL + "/api/login", {
@@ -78,13 +78,15 @@ export const Home = () => {
 			},
 		})
 			.then((response) => response.json())
-			.then((result) => {
-				console.log(result)
+			.then((data) => {
+				console.log(data["result"]); // Mostrar el arreglo en la consola
 				setSignupMessage("¡Te has registrado exitosamente!");
 			})
 			.catch((error) => console.log("error", error));
 	}
-	
+
+
+
 
 
 	return (
@@ -95,7 +97,7 @@ export const Home = () => {
 					<h1 className="m-4">Sign Up</h1>
 					<div className="m-2">
 						<label htmlFor="nombre">Nombre</label>
-						<input type="text" value={name} onChange={(e)=> setName(e.target.value)} id="nombre" placeholder="Escribe tu nombre"></input>
+						<input type="text" value={name} onChange={(e) => setName(e.target.value)} id="nombre" placeholder="Escribe tu nombre"></input>
 					</div>
 					<div className="m-2">
 						<label htmlFor="last_name">Last name</label>
@@ -107,8 +109,8 @@ export const Home = () => {
 					</div>
 					<button className="btn btn-warning m-3" onClick={signup}>Enviar</button>
 					{signupMessage && <div className="alert alert-success" role="alert">{signupMessage}</div>}
-					
-				</div> 
+
+				</div>
 
 
 				<div className="card col-6 p-5">
@@ -126,7 +128,7 @@ export const Home = () => {
 						<input type="text" value={ageLogin} onChange={(e) => setAgeLogin(e.target.value)} id="age" placeholder="Escribe tu nombre"></input>
 					</div>
 					<button className="btn btn-warning m-3" onClick={login}>Enviar</button>
-					
+
 
 				</div>
 
